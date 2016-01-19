@@ -1,0 +1,47 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+
+
+    <PreferenceCategory android:title="Router Settings">
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_router_url"
+            android:inputType="textUri"
+            android:key="general_router_url"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_router_url" />
+        <EditTextPreference
+            android:defaultValue="admin"
+            android:key="general_username"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:title="Username" />
+        <EditTextPreference
+            android:key="general_password"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:password="true"
+            android:title="Password" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Connection Settings">
+        <EditTextPreference
+            android:key="general_read_timeout"
+            android:inputType="number"
+            android:defaultValue="15"
+            android:title="Read Timeout"
+            />
+        <EditTextPreference
+            android:key="general_connect_timeout"
+            android:inputType="number"
+            android:defaultValue="15"
+            android:title="Connect Timeout"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

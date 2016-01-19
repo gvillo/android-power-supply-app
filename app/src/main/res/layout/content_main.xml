@@ -13,16 +13,29 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.MainActivity"
     tools:showIn="@layout/app_bar_main">
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
->
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/light_bulb_on"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/content_title"
+        android:id="@+id/status"
+        android:textSize="30sp"
+        android:textColor="#019428"
+        android:text="ONLINE" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ups_name_label"
         android:textColor="@android:color/white"
-        android:text="Hello World!" />
-</RelativeLayout>
+        android:text="UPS:" />
+</LinearLayout>
 </ScrollView>

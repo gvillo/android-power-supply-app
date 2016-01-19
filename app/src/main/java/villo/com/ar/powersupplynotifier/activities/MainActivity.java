@@ -1,5 +1,6 @@
 package villo.com.ar.powersupplynotifier.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,21 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.io.IOException;
-import java.net.Proxy;
-import java.util.concurrent.TimeUnit;
-
-import villo.com.ar.powersupplynotifier.Constants;
 import villo.com.ar.powersupplynotifier.R;
 import villo.com.ar.powersupplynotifier.helpers.ConnectivityHelper;
 import villo.com.ar.powersupplynotifier.helpers.FetchNewValuesHelper;
@@ -40,8 +27,8 @@ import villo.com.ar.powersupplynotifier.model.UpsResponse;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private MainActivity activity;
     private Handler mHandler;
+    private Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +37,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mHandler = new Handler(Looper.getMainLooper());
-        activity = this;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,17 +68,19 @@ public class MainActivity extends AppCompatActivity
 
     public void update(View view) throws IOException {
         if (!ConnectivityHelper.isOnline(this)) {
-            ((TextView)findViewById(R.id.content_title)).setText("No hay conexion a internet, no se puede comprobar el estado.");
+            showSnackbarForLong("No hay conexion a internet, no se puede comprobar el estado.");
+            return;
         }
-        ((TextView)findViewById(R.id.content_title)).setText("Actualizando...");
+        showSnackbarForIndefinite("Actualizando...");
 
-        FetchNewValuesHelper.fetchNewValues(new UpsCallback() {
+        FetchNewValuesHelper.fetchNewValues(this, new UpsCallback() {
             @Override
             public void onFailure(final UpsResponse response, IOException e) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ((TextView) findViewById(R.id.content_title)).setText(response.getErrorMessage());
+                        snackbar.dismiss();
+                        ((TextView) findViewById(R.id.ups_name_label)).setText(response.getErrorMessage());
                     }
                 });
             }
@@ -102,7 +90,8 @@ public class MainActivity extends AppCompatActivity
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ((TextView) findViewById(R.id.content_title)).setText(response.getInfoMessage());
+                        snackbar.dismiss();
+                        ((TextView) findViewById(R.id.ups_name_label)).setText(response.getInfoMessage());
                     }
                 });
             }
@@ -135,7 +124,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -150,12 +140,29 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_main) {
             // Handle the camera action
         } else if (id == R.id.nav_config) {
-
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showSnackbarForIndefinite(String message) {
+        if (snackbar != null && snackbar.isShown())
+            snackbar.dismiss();
+
+        snackbar = Snackbar.make(findViewById(R.id.fab), message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
+    }
+
+    private void showSnackbarForLong(String message) {
+        if (snackbar != null && snackbar.isShown())
+            snackbar.dismiss();
+
+        snackbar = Snackbar.make(findViewById(R.id.fab), message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 }
 

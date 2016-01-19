@@ -1,5 +1,8 @@
 package villo.com.ar.powersupplynotifier.helpers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.inputmethod.InputMethodSession;
 import android.widget.TextView;
 
@@ -28,12 +31,17 @@ import villo.com.ar.powersupplynotifier.model.UpsValues;
  */
 public class FetchNewValuesHelper {
 
-    public static void fetchNewValues(final UpsCallback upsCallback) {
+    public static void fetchNewValues(Context context, final UpsCallback upsCallback) {
         OkHttpClient client = new OkHttpClient();
+        final SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
         client.setAuthenticator(new Authenticator() {
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {
-                String credential = Credentials.basic("admin", "admin");
+                String username = sharedPreferences.getString("general_username", "");
+                String password = sharedPreferences.getString("general_password", "");
+
+                String credential = Credentials.basic(username, password);
                 return response.request().newBuilder().header("Authorization", credential).build();
             }
 
@@ -42,19 +50,23 @@ public class FetchNewValuesHelper {
                 return null;
             }
         });
-        Request request = new Request.Builder()
-                .url("http://192.168.1.1/ext/cgi-bin/tomatoups.cgi")
-                .build();
 
-        client.setReadTimeout(10, TimeUnit.SECONDS);
-        client.setConnectTimeout(10, TimeUnit.SECONDS);
+        String url = sharedPreferences.getString("general_router_url", "");
+
+        Request request = new Request.Builder().url(url).build();
+
+        Integer readTimeout = Integer.parseInt(sharedPreferences.getString("general_read_timeout", "15"));
+        Integer connectTimeout = Integer.parseInt(sharedPreferences.getString("general_connect_timeout", "15"));
+
+        client.setReadTimeout(readTimeout, TimeUnit.SECONDS);
+        client.setConnectTimeout(connectTimeout, TimeUnit.SECONDS);
         client.setFollowRedirects(true);
         Callback callback = new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 UpsResponse response = new UpsResponse();
 
-                response.setErrorMessage("Network problem.");
+                response.setErrorMessage("URL Unreachable. No hay luz...");
                 upsCallback.onFailure(response, e);
             }
 

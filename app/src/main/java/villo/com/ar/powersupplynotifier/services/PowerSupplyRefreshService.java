@@ -65,7 +65,7 @@ public class PowerSupplyRefreshService extends IntentService {
      * parameters.
      */
     private void handleActionFetchNewValues() {
-        FetchNewValuesHelper.fetchNewValues(new UpsCallback() {
+        FetchNewValuesHelper.fetchNewValues(this, new UpsCallback() {
             @Override
             public void onFailure(UpsResponse response, IOException e) {
                 // ignore this
@@ -76,9 +76,6 @@ public class PowerSupplyRefreshService extends IntentService {
                 sendNotification(response.getInfoMessage());
             }
         });
-
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     // Post a notification indicating whether a doodle was found.
