@@ -2,13 +2,13 @@ package villo.com.ar.powersupplynotifier.receivers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import villo.com.ar.powersupplynotifier.services.PowerSupplyRefreshService;
 
@@ -16,7 +16,7 @@ import villo.com.ar.powersupplynotifier.services.PowerSupplyRefreshService;
  * When the alarm fires, this WakefulBroadcastReceiver receives the broadcast Intent 
  * and then starts the IntentService {@code SampleSchedulingService} to do some work.
  */
-public class PowerSupplyAlarmReceiver extends BroadcastReceiver {
+public class PowerSupplyAlarmReceiver extends WakefulBroadcastReceiver {
     // The app's AlarmManager, which provides access to the system alarm services.
     private AlarmManager alarmMgr;
     // The pending intent that is triggered when the alarm fires.
@@ -43,7 +43,8 @@ public class PowerSupplyAlarmReceiver extends BroadcastReceiver {
         Intent service = new Intent(context, PowerSupplyRefreshService.class);
         service.setAction(PowerSupplyRefreshService.ACTION_FETCH_NEW_VALUES);
 
-        context.startService(service);
+        startWakefulService(context, service);
+        //context.startService(service);
     }
 
     // BEGIN_INCLUDE(set_alarm)

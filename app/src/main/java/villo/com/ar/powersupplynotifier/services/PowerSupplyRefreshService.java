@@ -117,7 +117,7 @@ public class PowerSupplyRefreshService extends IntentService {
         NotificationCompat.Builder mBuilder =
             new NotificationCompat.Builder(this)
                     .setSmallIcon(smallIcon)
-                    .setLights(Color.YELLOW, 300, 300)
+                    .setLights(Color.YELLOW, 700, 1300)
                     .setContentTitle(title)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(message))
