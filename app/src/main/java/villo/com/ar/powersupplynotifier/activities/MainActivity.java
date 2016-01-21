@@ -84,13 +84,13 @@ public class MainActivity extends AppCompatActivity
 
         TextView status = ((TextView)findViewById(R.id.status));
         if (values.getStatus().contains("ONLINE")) {
-            ((ImageView) findViewById(R.id.status_image)).setImageResource(R.drawable.ic_light_bulb_on);
+            ((ImageView) findViewById(R.id.status_image)).setImageResource(R.drawable.ic_light_bulb_on_fullsize);
             status.setTextColor(getResources().getColor(R.color.green));
         } else if (values.getStatus().contains("NO CONNECTION")) {
-            ((ImageView)findViewById(R.id.status_image)).setImageResource(R.drawable.ic_light_bulb_off);
+            ((ImageView)findViewById(R.id.status_image)).setImageResource(R.drawable.ic_light_bulb_off_fullsize);
             status.setTextColor(getResources().getColor(R.color.red));
         } else { // Battery.
-            ((ImageView)findViewById(R.id.status_image)).setImageResource(R.drawable.ic_battery);
+            ((ImageView)findViewById(R.id.status_image)).setImageResource(R.drawable.ic_battery_fullsize);
             status.setTextColor(getResources().getColor(R.color.orange));
         }
         ((TextView)findViewById(R.id.status)).setText(values.getStatus());

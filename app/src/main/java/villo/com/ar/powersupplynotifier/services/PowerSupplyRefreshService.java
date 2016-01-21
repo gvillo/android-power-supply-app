@@ -14,6 +14,7 @@ import villo.com.ar.powersupplynotifier.activities.MainActivity;
 import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
 import villo.com.ar.powersupplynotifier.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.model.UpsResponse;
+import villo.com.ar.powersupplynotifier.model.UpsValues;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -65,34 +66,60 @@ public class PowerSupplyRefreshService extends IntentService {
      * parameters.
      */
     private void handleActionFetchNewValues() {
+        final UpsValues oldValues = UpsDataHelper.retrieveValuesFromSharedPref(this);
+
         UpsDataHelper.fetchNewValues(this, new UpsCallback() {
             @Override
             public void onFailure(UpsResponse response, IOException e) {
                 // ignore this
+                if (oldValues == null || !oldValues.getStatus().equalsIgnoreCase(response.getValues().getStatus())) {
+                    // I need to notice the user this.
+                    sendNotification(response.getValues());
+                }
             }
 
             @Override
             public void onResponse(UpsResponse response) throws IOException {
-                sendNotification(response.getInfoMessage());
+                if (oldValues == null || !oldValues.getStatus().equalsIgnoreCase(response.getValues().getStatus())) {
+                    // I need to notice the user this.
+                    sendNotification(response.getValues());
+                }
             }
         });
     }
 
     // Post a notification indicating whether a doodle was found.
-    private void sendNotification(String msg) {
+    private void sendNotification(UpsValues values) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
 
+        int smallIcon;
+        String title;
+        String message;
+        if (values.getStatus().contains("ONLINE")) {
+            smallIcon = R.mipmap.ic_launcher;
+            title = "Volvió la luz!";
+            message = "Carga al " + values.getCharge() + " - AC: " + values.getVoltage();
+        } else if (values.getStatus().contains("NO CONNECTION")) {
+            smallIcon = R.drawable.ic_light_bulb_off;
+            title = "No hay luz!";
+            message = "Algo no está bien";
+        } else { // Battery.
+            smallIcon = R.drawable.ic_battery;
+            title = "En bateria!";
+            message = "Quedan " + values.getRemainingTime() + " de bateria.";
+        }
+
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Algo paso...")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
+            new NotificationCompat.Builder(this)
+                    .setSmallIcon(smallIcon)
+                    .setContentTitle(title)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(message))
+                    .setContentText(message);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
