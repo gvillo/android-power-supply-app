@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 
 import java.io.IOException;
@@ -116,6 +117,7 @@ public class PowerSupplyRefreshService extends IntentService {
         NotificationCompat.Builder mBuilder =
             new NotificationCompat.Builder(this)
                     .setSmallIcon(smallIcon)
+                    .setLights(Color.YELLOW, 300, 300)
                     .setContentTitle(title)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(message))
