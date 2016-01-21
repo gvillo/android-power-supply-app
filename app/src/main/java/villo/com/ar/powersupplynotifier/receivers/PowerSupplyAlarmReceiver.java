@@ -44,7 +44,6 @@ public class PowerSupplyAlarmReceiver extends WakefulBroadcastReceiver {
         service.setAction(PowerSupplyRefreshService.ACTION_FETCH_NEW_VALUES);
 
         startWakefulService(context, service);
-        //context.startService(service);
     }
 
     // BEGIN_INCLUDE(set_alarm)

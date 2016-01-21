@@ -16,6 +16,7 @@ import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
 import villo.com.ar.powersupplynotifier.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.model.UpsResponse;
 import villo.com.ar.powersupplynotifier.model.UpsValues;
+import villo.com.ar.powersupplynotifier.receivers.PowerSupplyAlarmReceiver;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -29,7 +30,6 @@ public class PowerSupplyRefreshService extends IntentService {
     // An ID used to post the notification.
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
@@ -59,6 +59,7 @@ public class PowerSupplyRefreshService extends IntentService {
             if (ACTION_FETCH_NEW_VALUES.equals(action)) {
                 handleActionFetchNewValues();
             }
+            PowerSupplyAlarmReceiver.completeWakefulIntent(intent);
         }
     }
 
