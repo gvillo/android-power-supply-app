@@ -18,24 +18,180 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/light_bulb_on"/>
-
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/no_data_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/status"
-        android:textSize="30sp"
-        android:textColor="#019428"
-        android:text="ONLINE" />
+        android:visibility="gone">
 
-    <TextView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#019428"
+            android:text="Please configure this app first." />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/status_container"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ups_name_label"
-        android:textColor="@android:color/white"
-        android:text="UPS:" />
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/status_image"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_light_bulb_on"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/status"
+            android:textSize="30sp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#019428"
+            android:text="ONLINE" />
+
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_name_label"
+                android:textColor="@android:color/white"
+                android:text="UPS:" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_name_value"
+                android:textColor="@android:color/white"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_charge_label"
+                android:textColor="@android:color/white"
+                android:text="Charge:" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_charge_value"
+                android:textColor="@android:color/white"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_voltage_label"
+                android:textColor="@android:color/white"
+                android:text="AC Input:" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_voltage_value"
+                android:textColor="@android:color/white"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_usage_label"
+                android:textColor="@android:color/white"
+                android:text="Usage:" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_usage_value"
+                android:textColor="@android:color/white"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_temperature_label"
+                android:textColor="@android:color/white"
+                android:text="Temperature:" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_temperature_value"
+                android:textColor="@android:color/white"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_remaining_label"
+                android:textColor="@android:color/white"
+                android:text="Remaining Time:" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_remaining_value"
+                android:textColor="@android:color/white"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_lastupdate_label"
+                android:textColor="@android:color/white"
+                android:text="Last Update:" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ups_lastupdate_value"
+                android:textColor="@android:color/white"
+                android:text="" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
 </ScrollView>

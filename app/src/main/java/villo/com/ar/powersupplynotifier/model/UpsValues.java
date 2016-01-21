@@ -11,6 +11,7 @@ public class UpsValues {
     private String usagePercentage;
     private String temperature;
     private String remainingTime;
+    private String lastUpdate;
 
     public String getName() {
         return name;
@@ -66,5 +67,13 @@ public class UpsValues {
 
     public void setRemainingTime(String remainingTime) {
         this.remainingTime = remainingTime;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

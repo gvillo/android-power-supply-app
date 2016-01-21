@@ -15,14 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
 import villo.com.ar.powersupplynotifier.R;
 import villo.com.ar.powersupplynotifier.helpers.ConnectivityHelper;
-import villo.com.ar.powersupplynotifier.helpers.FetchNewValuesHelper;
+import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
 import villo.com.ar.powersupplynotifier.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.model.UpsResponse;
+import villo.com.ar.powersupplynotifier.model.UpsValues;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,28 +61,64 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        try {
+        UpsValues savedData = UpsDataHelper.retrieveValuesFromSharedPref(this);
+        if (savedData == null) {
+            findViewById(R.id.status_container).setVisibility(View.GONE);
+            findViewById(R.id.no_data_container).setVisibility(View.VISIBLE);
+        } else {
+            populateDataInUi(savedData);
+            findViewById(R.id.no_data_container).setVisibility(View.GONE);
+            findViewById(R.id.status_container).setVisibility(View.VISIBLE);
+        }
+
+        /*try {
             update(fab);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
-    public void update(View view) throws IOException {
+    private void populateDataInUi(UpsValues values) {
+        findViewById(R.id.no_data_container).setVisibility(View.GONE);
+        findViewById(R.id.status_container).setVisibility(View.VISIBLE);
+
+        TextView status = ((TextView)findViewById(R.id.status));
+        if (values.getStatus().contains("ONLINE")) {
+            ((ImageView) findViewById(R.id.status_image)).setImageResource(R.drawable.ic_light_bulb_on);
+            status.setTextColor(getResources().getColor(R.color.green));
+        } else if (values.getStatus().contains("NO CONNECTION")) {
+            ((ImageView)findViewById(R.id.status_image)).setImageResource(R.drawable.ic_light_bulb_off);
+            status.setTextColor(getResources().getColor(R.color.red));
+        } else { // Battery.
+            ((ImageView)findViewById(R.id.status_image)).setImageResource(R.drawable.ic_battery);
+            status.setTextColor(getResources().getColor(R.color.orange));
+        }
+        ((TextView)findViewById(R.id.status)).setText(values.getStatus());
+
+        ((TextView)findViewById(R.id.ups_name_value)).setText(values.getName());
+        ((TextView)findViewById(R.id.ups_charge_value)).setText(values.getCharge());
+        ((TextView)findViewById(R.id.ups_voltage_value)).setText(values.getVoltage());
+        ((TextView)findViewById(R.id.ups_temperature_value)).setText(values.getTemperature());
+        ((TextView)findViewById(R.id.ups_lastupdate_value)).setText(values.getLastUpdate());
+        ((TextView)findViewById(R.id.ups_remaining_value)).setText(values.getRemainingTime());
+        ((TextView)findViewById(R.id.ups_usage_value)).setText(values.getUsagePercentage());
+    }
+
+    private void update(View view) throws IOException {
         if (!ConnectivityHelper.isOnline(this)) {
             showSnackbarForLong("No hay conexion a internet, no se puede comprobar el estado.");
             return;
         }
         showSnackbarForIndefinite("Actualizando...");
 
-        FetchNewValuesHelper.fetchNewValues(this, new UpsCallback() {
+        UpsDataHelper.fetchNewValues(this, new UpsCallback() {
             @Override
             public void onFailure(final UpsResponse response, IOException e) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         snackbar.dismiss();
-                        ((TextView) findViewById(R.id.ups_name_label)).setText(response.getErrorMessage());
+                        populateDataInUi(response.getValues());
                     }
                 });
             }
@@ -91,7 +129,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         snackbar.dismiss();
-                        ((TextView) findViewById(R.id.ups_name_label)).setText(response.getInfoMessage());
+                        populateDataInUi(response.getValues());
                     }
                 });
             }

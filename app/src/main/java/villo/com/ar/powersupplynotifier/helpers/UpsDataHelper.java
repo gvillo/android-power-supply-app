@@ -18,6 +18,8 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import villo.com.ar.powersupplynotifier.Constants;
@@ -29,9 +31,9 @@ import villo.com.ar.powersupplynotifier.model.UpsValues;
 /**
  * Created by villo on 18/1/16.
  */
-public class FetchNewValuesHelper {
+public class UpsDataHelper {
 
-    public static void fetchNewValues(Context context, final UpsCallback upsCallback) {
+    public static void fetchNewValues(final Context context, final UpsCallback upsCallback) {
         OkHttpClient client = new OkHttpClient();
         final SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -66,7 +68,12 @@ public class FetchNewValuesHelper {
             public void onFailure(Request request, IOException e) {
                 UpsResponse response = new UpsResponse();
 
-                response.setErrorMessage("URL Unreachable. No hay luz...");
+                UpsValues values = new UpsValues();
+                values.setStatus("NO CONNECTION");
+                values.setLastUpdate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime()));
+                response.setValues(values);
+                storeValuesSharedPref(context, values);
+
                 upsCallback.onFailure(response, e);
             }
 
@@ -99,13 +106,15 @@ public class FetchNewValuesHelper {
                         values.setUsagePercentage(usagePercentage);
                         values.setTemperature(temperature);
                         values.setRemainingTime(remainingTime);
+                        values.setLastUpdate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime()));
+                        storeValuesSharedPref(context, values);
                         upsResponse.setValues(values);
 
-                        if (status.equalsIgnoreCase("ONLINE")) {
+                        if (status.contains("ONLINE")) {
                             upsResponse.setInfoMessage("Hay luz, todo ok.");
                         }
                         else {
-                            upsResponse.setInfoMessage("En bateria, en breve no habrá luz.");
+                            upsResponse.setInfoMessage("En bateria, en breves no habrá luz.");
                         }
                     }
                     upsCallback.onResponse(upsResponse);
@@ -113,6 +122,41 @@ public class FetchNewValuesHelper {
             }
         };
         client.newCall(request).enqueue(callback);
+    }
+
+    private static void storeValuesSharedPref(Context context, UpsValues values) {
+        final SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("upsvalues_name", values.getName());
+        editor.putString("upsvalues_status", values.getStatus());
+        editor.putString("upsvalues_charge", values.getCharge());
+        editor.putString("upsvalues_voltage", values.getVoltage());
+        editor.putString("upsvalues_usagePercentage", values.getUsagePercentage());
+        editor.putString("upsvalues_temperature", values.getTemperature());
+        editor.putString("upsvalues_remainingTime", values.getRemainingTime());
+        editor.putString("upsvalues_lastUpdate", values.getLastUpdate());
+        editor.apply();
+    }
+
+    public static UpsValues retrieveValuesFromSharedPref(Context context) {
+        UpsValues response = new UpsValues();
+        final SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        response.setLastUpdate(sharedPreferences.getString("upsvalues_lastUpdate", ""));
+        if (!response.getLastUpdate().isEmpty()) {
+            response.setName(sharedPreferences.getString("upsvalues_name", ""));
+            response.setStatus(sharedPreferences.getString("upsvalues_status", ""));
+            response.setCharge(sharedPreferences.getString("upsvalues_charge", ""));
+            response.setVoltage(sharedPreferences.getString("upsvalues_voltage", ""));
+            response.setUsagePercentage(sharedPreferences.getString("upsvalues_usagePercentage", ""));
+            response.setTemperature(sharedPreferences.getString("upsvalues_temperature", ""));
+            response.setRemainingTime(sharedPreferences.getString("upsvalues_remainingTime", ""));
+        } else {
+            return null;
+        }
+        return response;
     }
 
 }

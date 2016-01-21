@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import villo.com.ar.powersupplynotifier.R;
 import villo.com.ar.powersupplynotifier.activities.MainActivity;
-import villo.com.ar.powersupplynotifier.helpers.FetchNewValuesHelper;
+import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
 import villo.com.ar.powersupplynotifier.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.model.UpsResponse;
 
@@ -65,7 +65,7 @@ public class PowerSupplyRefreshService extends IntentService {
      * parameters.
      */
     private void handleActionFetchNewValues() {
-        FetchNewValuesHelper.fetchNewValues(this, new UpsCallback() {
+        UpsDataHelper.fetchNewValues(this, new UpsCallback() {
             @Override
             public void onFailure(UpsResponse response, IOException e) {
                 // ignore this
