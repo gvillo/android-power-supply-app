@@ -62,7 +62,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUiWithLocalData();
+    }
+
+    private void updateUiWithLocalData() {
         UpsValues savedData = UpsDataHelper.retrieveValuesFromSharedPref(this);
         if (savedData == null) {
             findViewById(R.id.status_container).setVisibility(View.GONE);
@@ -72,12 +80,6 @@ public class MainActivity extends AppCompatActivity
             findViewById(R.id.no_data_container).setVisibility(View.GONE);
             findViewById(R.id.status_container).setVisibility(View.VISIBLE);
         }
-
-        /*try {
-            update(fab);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     private void populateDataInUi(UpsValues values) {
@@ -170,6 +172,8 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i = new Intent(this, SettingsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
         }
 

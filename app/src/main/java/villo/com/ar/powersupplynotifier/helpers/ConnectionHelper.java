@@ -1,12 +1,21 @@
 package villo.com.ar.powersupplynotifier.helpers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 import villo.com.ar.powersupplynotifier.services.ServiceCallback;
 
@@ -43,7 +52,7 @@ public class ConnectionHelper {
      * @return
      */
     public static void isConnectedAndReachable(Context context, final ServiceCallback<Boolean> callback){
-        isConnectedAndReachable(context, "google.com", callback);
+        isConnectedAndReachable(context, "http://google.com", callback);
     }
 
     /**
@@ -53,19 +62,38 @@ public class ConnectionHelper {
      */
     public static void isConnectedAndReachable(final Context context, final String host, final ServiceCallback<Boolean> callback){
         final NetworkInfo info = ConnectionHelper.getNetworkInfo(context);
-        new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    InetAddress address = InetAddress.getByName(host);
-                    callback.execute(context, address != null && info != null && info.isConnected());
-                } catch (UnknownHostException e) {
 
+        if (info != null && info.isConnected()) {
+            final SharedPreferences sharedPreferences = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            Integer readTimeout = Integer.parseInt(sharedPreferences.getString("general_read_timeout", "15"));
+            Integer connectTimeout = Integer.parseInt(sharedPreferences.getString("general_connect_timeout", "15"));
+
+            OkHttpClient client = new OkHttpClient();
+            client.setReadTimeout(readTimeout, TimeUnit.SECONDS);
+            client.setConnectTimeout(connectTimeout, TimeUnit.SECONDS);
+
+            Request request = new Request.Builder().url(host).build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    callback.execute(context, false);
                 }
-                return null;
-            }
-        }.execute();
 
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        callback.execute(context, true);
+                    } else {
+                        callback.execute(context, false);
+                    }
+                }
+            });
+        } else {
+            callback.execute(context, false);
+        }
     }
 
     /**

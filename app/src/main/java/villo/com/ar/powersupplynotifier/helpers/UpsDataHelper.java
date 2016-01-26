@@ -3,8 +3,6 @@ package villo.com.ar.powersupplynotifier.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.view.inputmethod.InputMethodSession;
-import android.widget.TextView;
 
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Callback;
@@ -23,7 +21,6 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import villo.com.ar.powersupplynotifier.Constants;
-import villo.com.ar.powersupplynotifier.R;
 import villo.com.ar.powersupplynotifier.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.model.UpsResponse;
 import villo.com.ar.powersupplynotifier.model.UpsValues;
