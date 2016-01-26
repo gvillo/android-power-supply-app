@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import villo.com.ar.powersupplynotifier.R;
 import villo.com.ar.powersupplynotifier.activities.MainActivity;
+import villo.com.ar.powersupplynotifier.helpers.ConnectionHelper;
 import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
 import villo.com.ar.powersupplynotifier.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.model.UpsResponse;
@@ -68,23 +69,30 @@ public class PowerSupplyRefreshService extends IntentService {
      * parameters.
      */
     private void handleActionFetchNewValues() {
-        final UpsValues oldValues = UpsDataHelper.retrieveValuesFromSharedPref(this);
-
-        UpsDataHelper.fetchNewValues(this, new UpsCallback() {
+        ConnectionHelper.isConnectedAndReachable(this, new ServiceCallback<Boolean>() {
             @Override
-            public void onFailure(UpsResponse response, IOException e) {
-                // ignore this
-                if (oldValues == null || !oldValues.getStatus().equalsIgnoreCase(response.getValues().getStatus())) {
-                    // I need to notice the user this.
-                    sendNotification(response.getValues());
-                }
-            }
+            public void execute(Context context, Boolean response) {
+                if (response) {
+                    final UpsValues oldValues = UpsDataHelper.retrieveValuesFromSharedPref(context);
 
-            @Override
-            public void onResponse(UpsResponse response) throws IOException {
-                if (oldValues == null || !oldValues.getStatus().equalsIgnoreCase(response.getValues().getStatus())) {
-                    // I need to notice the user this.
-                    sendNotification(response.getValues());
+                    UpsDataHelper.fetchNewValues(context, new UpsCallback() {
+                        @Override
+                        public void onFailure(UpsResponse response, IOException e) {
+                            // ignore this
+                            if (oldValues == null || !oldValues.getStatus().equalsIgnoreCase(response.getValues().getStatus())) {
+                                // I need to notice the user this.
+                                sendNotification(response.getValues());
+                            }
+                        }
+
+                        @Override
+                        public void onResponse(UpsResponse response) throws IOException {
+                            if (oldValues == null || !oldValues.getStatus().equalsIgnoreCase(response.getValues().getStatus())) {
+                                // I need to notice the user this.
+                                sendNotification(response.getValues());
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -120,6 +128,7 @@ public class PowerSupplyRefreshService extends IntentService {
                     .setSmallIcon(smallIcon)
                     .setLights(Color.YELLOW, 700, 1300)
                     .setContentTitle(title)
+                    .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(message))
                     .setContentText(message);

@@ -1,5 +1,6 @@
 package villo.com.ar.powersupplynotifier.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,11 +21,12 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import villo.com.ar.powersupplynotifier.R;
-import villo.com.ar.powersupplynotifier.helpers.ConnectivityHelper;
+import villo.com.ar.powersupplynotifier.helpers.ConnectionHelper;
 import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
 import villo.com.ar.powersupplynotifier.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.model.UpsResponse;
 import villo.com.ar.powersupplynotifier.model.UpsValues;
+import villo.com.ar.powersupplynotifier.services.ServiceCallback;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -105,33 +107,38 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void update(View view) throws IOException {
-        if (!ConnectivityHelper.isOnline(this)) {
-            showSnackbarForLong("No hay conexion a internet, no se puede comprobar el estado.");
-            return;
-        }
-        showSnackbarForIndefinite("Actualizando...");
-
-        UpsDataHelper.fetchNewValues(this, new UpsCallback() {
+        ConnectionHelper.isConnectedAndReachable(this, new ServiceCallback<Boolean>() {
             @Override
-            public void onFailure(final UpsResponse response, IOException e) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        snackbar.dismiss();
-                        populateDataInUi(response.getValues());
-                    }
-                });
-            }
+            public void execute(Context context, Boolean response) {
+                if (!response) {
+                    showSnackbarForLong("No hay conexion a internet, no se puede comprobar el estado.");
+                } else {
+                    showSnackbarForIndefinite("Actualizando...");
 
-            @Override
-            public void onResponse(final UpsResponse response) throws IOException {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        snackbar.dismiss();
-                        populateDataInUi(response.getValues());
-                    }
-                });
+                    UpsDataHelper.fetchNewValues(context, new UpsCallback() {
+                        @Override
+                        public void onFailure(final UpsResponse response, IOException e) {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    snackbar.dismiss();
+                                    populateDataInUi(response.getValues());
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onResponse(final UpsResponse response) throws IOException {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    snackbar.dismiss();
+                                    populateDataInUi(response.getValues());
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
     }
