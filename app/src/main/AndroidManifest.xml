@@ -43,7 +43,7 @@
             android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
     </application>
 
 </manifest>
