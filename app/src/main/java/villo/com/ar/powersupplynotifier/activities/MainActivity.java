@@ -109,14 +109,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void update(View view) throws IOException {
+        showSnackbarForIndefinite("Actualizando...");
+
         ConnectionHelper.isConnectedAndReachable(this, new ServiceCallback<Boolean>() {
             @Override
             public void execute(Context context, Boolean response) {
-                if (!response) {
-                    showSnackbarForLong("No hay conexion a internet, no se puede comprobar el estado.");
-                } else {
-                    showSnackbarForIndefinite("Actualizando...");
-
+                if (response) {
                     UpsDataHelper.fetchNewValues(context, new UpsCallback() {
                         @Override
                         public void onFailure(final UpsResponse response, IOException e) {
@@ -140,6 +138,8 @@ public class MainActivity extends AppCompatActivity
                             });
                         }
                     });
+                } else {
+                    showSnackbarForLong("No hay conexion a internet, no se puede comprobar el estado.");
                 }
             }
         });

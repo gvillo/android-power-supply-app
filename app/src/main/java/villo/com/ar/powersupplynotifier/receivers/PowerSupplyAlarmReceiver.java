@@ -74,7 +74,7 @@ public class PowerSupplyAlarmReceiver extends WakefulBroadcastReceiver {
 
         // Enable {@code SampleBootReceiver} to automatically restart the alarm when the
         // device is rebooted.
-        ComponentName receiver = new ComponentName(context, PowerSupplyAlarmReceiver.class);
+        ComponentName receiver = new ComponentName(context, PowerSupplyBootReceiver.class);
         PackageManager pm = context.getPackageManager();
 
         pm.setComponentEnabledSetting(receiver,
@@ -96,7 +96,7 @@ public class PowerSupplyAlarmReceiver extends WakefulBroadcastReceiver {
         
         // Disable {@code SampleBootReceiver} so that it doesn't automatically restart the 
         // alarm when the device is rebooted.
-        ComponentName receiver = new ComponentName(context, PowerSupplyAlarmReceiver.class);
+        ComponentName receiver = new ComponentName(context, PowerSupplyBootReceiver.class);
         PackageManager pm = context.getPackageManager();
 
         pm.setComponentEnabledSetting(receiver,
