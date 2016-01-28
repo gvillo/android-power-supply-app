@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.IOException;
 
@@ -87,6 +88,8 @@ public class PowerSupplyRefreshService extends IntentService {
 
                         @Override
                         public void onResponse(UpsResponse response) throws IOException {
+                            LocalBroadcastManager.getInstance(PowerSupplyRefreshService.this).sendBroadcast(new Intent(MainActivity.ACTION_FETCH_NEW_VALUES));
+
                             if (oldValues == null || !oldValues.getStatus().equalsIgnoreCase(response.getValues().getStatus())) {
                                 // I need to notice the user this.
                                 sendNotification(response.getValues());

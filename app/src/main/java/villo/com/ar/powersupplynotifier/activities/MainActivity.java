@@ -1,12 +1,15 @@
 package villo.com.ar.powersupplynotifier.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     private Handler mHandler;
     private Snackbar snackbar;
+    public static final String ACTION_FETCH_NEW_VALUES = "villo.com.ar.MainActivity.action.ACTION_FETCH_NEW_VALUES";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_FETCH_NEW_VALUES));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -81,6 +87,15 @@ public class MainActivity extends AppCompatActivity
             findViewById(R.id.status_container).setVisibility(View.VISIBLE);
         }
     }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase("MainActivity")) {
+                updateUiWithLocalData();
+            }
+        }
+    };
 
     private void populateDataInUi(UpsValues values) {
         findViewById(R.id.no_data_container).setVisibility(View.GONE);
