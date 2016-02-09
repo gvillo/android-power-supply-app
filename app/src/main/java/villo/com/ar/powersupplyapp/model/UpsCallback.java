@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.model;
+package villo.com.ar.powersupplyapp.model;
 
 import java.io.IOException;
 

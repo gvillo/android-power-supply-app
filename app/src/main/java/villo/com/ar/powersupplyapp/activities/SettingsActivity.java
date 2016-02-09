@@ -1,10 +1,8 @@
-package villo.com.ar.powersupplynotifier.activities;
+package villo.com.ar.powersupplyapp.activities;
 
 
 import android.annotation.TargetApi;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -23,8 +21,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import villo.com.ar.powersupplynotifier.R;
-import villo.com.ar.powersupplynotifier.receivers.PowerSupplyAlarmReceiver;
-import villo.com.ar.powersupplynotifier.receivers.PowerSupplyBootReceiver;
+import villo.com.ar.powersupplyapp.receivers.PowerSupplyAlarmReceiver;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.services;
+package villo.com.ar.powersupplyapp.services;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -11,14 +11,14 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.IOException;
 
+import villo.com.ar.powersupplyapp.activities.MainActivity;
+import villo.com.ar.powersupplyapp.helpers.ConnectionHelper;
+import villo.com.ar.powersupplyapp.model.UpsCallback;
 import villo.com.ar.powersupplynotifier.R;
-import villo.com.ar.powersupplynotifier.activities.MainActivity;
-import villo.com.ar.powersupplynotifier.helpers.ConnectionHelper;
-import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
-import villo.com.ar.powersupplynotifier.model.UpsCallback;
-import villo.com.ar.powersupplynotifier.model.UpsResponse;
-import villo.com.ar.powersupplynotifier.model.UpsValues;
-import villo.com.ar.powersupplynotifier.receivers.PowerSupplyAlarmReceiver;
+import villo.com.ar.powersupplyapp.helpers.UpsDataHelper;
+import villo.com.ar.powersupplyapp.model.UpsResponse;
+import villo.com.ar.powersupplyapp.model.UpsValues;
+import villo.com.ar.powersupplyapp.receivers.PowerSupplyAlarmReceiver;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

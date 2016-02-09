@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.services;
+package villo.com.ar.powersupplyapp.services;
 
 import android.content.Context;
 

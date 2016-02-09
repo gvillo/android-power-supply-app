@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.activities;
+package villo.com.ar.powersupplyapp.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,13 +23,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
+
+import villo.com.ar.powersupplyapp.helpers.ConnectionHelper;
 import villo.com.ar.powersupplynotifier.R;
-import villo.com.ar.powersupplynotifier.helpers.ConnectionHelper;
-import villo.com.ar.powersupplynotifier.helpers.UpsDataHelper;
-import villo.com.ar.powersupplynotifier.model.UpsCallback;
-import villo.com.ar.powersupplynotifier.model.UpsResponse;
-import villo.com.ar.powersupplynotifier.model.UpsValues;
-import villo.com.ar.powersupplynotifier.services.ServiceCallback;
+import villo.com.ar.powersupplyapp.helpers.UpsDataHelper;
+import villo.com.ar.powersupplyapp.model.UpsCallback;
+import villo.com.ar.powersupplyapp.model.UpsResponse;
+import villo.com.ar.powersupplyapp.model.UpsValues;
+import villo.com.ar.powersupplyapp.services.ServiceCallback;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

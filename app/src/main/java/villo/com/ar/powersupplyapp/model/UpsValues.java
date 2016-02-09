@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.model;
+package villo.com.ar.powersupplyapp.model;
 
 /**
  * Created by villo on 18/1/16.

@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.helpers;
+package villo.com.ar.powersupplyapp.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -28,10 +28,10 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import villo.com.ar.powersupplynotifier.Constants;
-import villo.com.ar.powersupplynotifier.model.UpsCallback;
-import villo.com.ar.powersupplynotifier.model.UpsResponse;
-import villo.com.ar.powersupplynotifier.model.UpsValues;
+import villo.com.ar.powersupplyapp.Constants;
+import villo.com.ar.powersupplyapp.model.UpsCallback;
+import villo.com.ar.powersupplyapp.model.UpsValues;
+import villo.com.ar.powersupplyapp.model.UpsResponse;
 
 /**
  * Created by villo on 18/1/16.

@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.receivers;
+package villo.com.ar.powersupplyapp.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

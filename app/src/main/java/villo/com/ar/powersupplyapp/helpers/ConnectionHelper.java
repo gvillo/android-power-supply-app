@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.helpers;
+package villo.com.ar.powersupplyapp.helpers;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import villo.com.ar.powersupplynotifier.services.ServiceCallback;
+import villo.com.ar.powersupplyapp.services.ServiceCallback;
 
 /**
  * Created by gvilloldo on 09/10/2014.

@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.activities;
+package villo.com.ar.powersupplyapp.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

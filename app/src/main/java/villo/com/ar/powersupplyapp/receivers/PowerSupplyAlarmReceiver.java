@@ -1,4 +1,4 @@
-package villo.com.ar.powersupplynotifier.receivers;
+package villo.com.ar.powersupplyapp.receivers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,7 +10,7 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import villo.com.ar.powersupplynotifier.services.PowerSupplyRefreshService;
+import villo.com.ar.powersupplyapp.services.PowerSupplyRefreshService;
 
 /**
  * When the alarm fires, this WakefulBroadcastReceiver receives the broadcast Intent 
