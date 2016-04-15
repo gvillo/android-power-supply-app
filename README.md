@@ -1,1 +1,1 @@
-# Power Supply app
+# Power Supply - Android app
